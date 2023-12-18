@@ -16,9 +16,9 @@ function DeleteCard(evt) {
 // функция добавления новой карточки
 function AddCard(card, deleteFunction) {
   const cardElement = cardTemplateElement.cloneNode(true); // клонируем шаблон
-  const cardElementImage = cardElement.querySelector(".card__image");
-  const cardElementTitle = cardElement.querySelector(".card__title");
-  const cardElementDelButton = cardElement.querySelector(".card__delete-button");
+  const cardElementImage = cardElement.querySelector(".card__image"); // изображение
+  const cardElementTitle = cardElement.querySelector(".card__title"); // заголовок карточки
+  const cardElementDelButton = cardElement.querySelector(".card__delete-button"); // кнопка удаления
   // устанавливаем значения
   cardElementImage.src = card.link;
   cardElementImage.alt = card.name;
