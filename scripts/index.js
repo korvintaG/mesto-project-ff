@@ -17,7 +17,7 @@ function deleteCard(cardElement) {
 
 /* функция создания DOM-элемента новой карточки  
  * @constructor
- * @param {object} card - данные о карточке из двух строковых примитивов - имени и ссылки
+ * @param {object} cardRecord - данные о карточке из двух строковых примитивов - имени и ссылки
  * @param {function} deleteFunction - функция удаления карточки для коллбэка
  */
 function createCard(cardRecord, deleteFunction) {
