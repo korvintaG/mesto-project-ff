@@ -1,6 +1,6 @@
 import './pages/index.css'; // добавьте импорт главного файла стилей 
-import { initialCards  } from './components/cards.js'
-import { createCard, deleteCard, likeCard  } from './components/card.js'
+import { initialCards } from './components/cards.js'
+import { createCard, deleteCard, likeCard } from './components/card.js'
 import { openModal, closeModal } from './components/modal.js'
 
 const cardContainer = document.querySelector(".places__list"); // DOM узел куда добавлять новые карточки
@@ -42,8 +42,8 @@ function handleProfileFormSubmit(evt) {
 // обработчик события - submit формы создания новой карточки
 function handleNewCardFormSubmit(evt) {
   evt.preventDefault(); // отменяем стандартную обработку submit
-  const cardElement = createCard({name: newCardFormName.value, link: newCardFormLink.value}, // создаем карточку
-      deleteCard, popupCardImage, likeCard);
+  const cardElement = createCard({ name: newCardFormName.value, link: newCardFormLink.value }, // создаем карточку
+    deleteCard, popupCardImage, likeCard);
   cardContainer.prepend(cardElement); // добавляем карточку на страницу в начало
   popupNewCardForm.reset(); // очистка полей формы
   closeModal(popupNewCard); // закрываем попап
@@ -64,16 +64,15 @@ initialCards.forEach((cardRecord) => {
   cardContainer.append(cardElement); // добавляем карточку на страницу
 });
 
-
-// делаем все попапы с небольшой анимации как в ТЗ
-const classAnimated='popup_is-animated'; // тот самый класс для анимации
-popupProfileEdit.classList.add(classAnimated);  
-popupNewCard.classList.add(classAnimated);  
-popupImage.classList.add(classAnimated);  
+// делаем все попапы с небольшой анимацией как в ТЗ
+const classAnimated = 'popup_is-animated'; // тот самый класс для анимации
+popupProfileEdit.classList.add(classAnimated);
+popupNewCard.classList.add(classAnimated);
+popupImage.classList.add(classAnimated);
 
 // назначаем события
 profileEditButton.addEventListener("click", editProfile); // редактирование профайла
-buttonAddCard.addEventListener("click", () => {openModal(popupNewCard);}); // добавление новой карточки
+buttonAddCard.addEventListener("click", () => { openModal(popupNewCard); }); // добавление новой карточки
 // submit
-popupProfileForm.addEventListener('submit', handleProfileFormSubmit); // редактирование профайла
+popupProfileForm.addEventListener('submit', handleProfileFormSubmit); // сохранение профайла
 popupNewCardForm.addEventListener('submit', handleNewCardFormSubmit); // создание новой карточки

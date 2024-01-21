@@ -8,10 +8,9 @@ let buttontClose;  // кнопка закрытия формы
 export function openModal(popup) {
   // означивание
   currentPopup = popup;
-  buttontClose = popup.querySelector(".popup__close");  
+  buttontClose = popup.querySelector(".popup__close");
   // открываем форму
-  popup.classList.add('popup_is-opened');  
-  
+  popup.classList.add('popup_is-opened');
   // слушатели добавляем
   buttontClose.addEventListener("click", closeModalInner);  // кнопка закрытия
   document.addEventListener("keydown", handleKey);  // Esc - закрытие формы
@@ -42,9 +41,9 @@ function handleKey(evt) {
  */
 export function closeModal(popup) {
   // слушатели снимаем
-  buttontClose.removeEventListener("click", closeModalInner);  
-  document.removeEventListener("keydown", handleKey);  
-  popup.removeEventListener("click", closeWindowOverlay); 
+  buttontClose.removeEventListener("click", closeModalInner);
+  document.removeEventListener("keydown", handleKey);
+  popup.removeEventListener("click", closeWindowOverlay);
   // собственно говоря закрываем
   popup.classList.remove('popup_is-opened');
 }

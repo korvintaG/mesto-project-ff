@@ -12,7 +12,8 @@ export function deleteCard(cardElement) {
  * @param {DOM-object} evt - стандартная переменная события
  */
 export function likeCard(evt) {
-  evt.target.classList.toggle('card__like-button_is-active');
+  const heart = evt.target; // текущее сердечко
+  heart.classList.toggle('card__like-button_is-active');
 }
 
 /* функция создания DOM-элемента новой карточки  
