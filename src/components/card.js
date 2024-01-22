@@ -19,11 +19,12 @@ export function likeCard(evt) {
 /* функция создания DOM-элемента новой карточки  
  * @constructor
  * @param {object} cardRecord - данные о карточке из двух строковых примитивов - имени и ссылки
- * @param {function} deleteFunction - функция удаления карточки для коллбэка
- * @param {function} popupFunction - функция попапа изображения карточки
- * @param {function} likeFunction - функция лайка
+ * @param {object} handler - объект функций обработчиков:
+ *                            deleteFunction - функция удаления карточки для коллбэка
+ *                            popupFunction - функция попапа изображения карточки
+ *                            likeFunction - функция лайка
   */
-export function createCard(cardRecord, deleteFunction, popupFunction, likeFunction) {
+export function createCard(cardRecord, handler) {
   const cardElement = cardTemplateElement.cloneNode(true); // клонируем шаблон
   const cardElementImage = cardElement.querySelector(".card__image"); // изображение
   const cardElementTitle = cardElement.querySelector(".card__title"); // заголовок карточки
@@ -34,9 +35,9 @@ export function createCard(cardRecord, deleteFunction, popupFunction, likeFuncti
   cardElementImage.alt = cardRecord.name;
   cardElementTitle.textContent = cardRecord.name;
   // добавляем обработчик клика
-  cardElementDelButton.addEventListener("click", () => deleteFunction(cardElement));
-  cardElementImage.addEventListener('click', popupFunction);
-  cardElementLikeButton.addEventListener('click', likeFunction);
+  cardElementDelButton.addEventListener("click", () => handler.deleteFunction(cardElement));
+  cardElementImage.addEventListener('click', () => {handler.popupFunction(cardRecord)});
+  cardElementLikeButton.addEventListener('click', handler.likeFunction);
   // возврат подготовленного DOM-элемента карточки
   return cardElement;
 }

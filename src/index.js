@@ -1,7 +1,7 @@
 import './pages/index.css'; // добавьте импорт главного файла стилей 
 import { initialCards } from './components/cards.js'
 import { createCard, deleteCard, likeCard } from './components/card.js'
-import { openModal, closeModal } from './components/modal.js'
+import { openModal, closeModal, closeWindowOverlay } from './components/modal.js'
 
 const cardContainer = document.querySelector(".places__list"); // DOM узел куда добавлять новые карточки
 // профайл - основная страница
@@ -43,36 +43,39 @@ function handleProfileFormSubmit(evt) {
 function handleNewCardFormSubmit(evt) {
   evt.preventDefault(); // отменяем стандартную обработку submit
   const cardElement = createCard({ name: newCardFormName.value, link: newCardFormLink.value }, // создаем карточку
-    deleteCard, popupCardImage, likeCard);
+    {deleteFunction: deleteCard, popupFunction:popupCardImage, likeFunction:likeCard});
   cardContainer.prepend(cardElement); // добавляем карточку на страницу в начало
   popupNewCardForm.reset(); // очистка полей формы
   closeModal(popupNewCard); // закрываем попап
 }
 
-// обработчик события - попап изображения карточки
-function popupCardImage(evt) {
+// обработчик события - попап изображения карточки (передается запись карточки - name и link)
+function popupCardImage(cardRecord) {
   openModal(popupImage);
-  popupImageImage.src = evt.target.src;
-  const imageParent = evt.target.parentElement;
-  const imageTitle = imageParent.querySelector('.card__title'); // ищем заголовок изображения
-  popupImageCaption.textContent = imageTitle.textContent;
+  popupImageImage.src = cardRecord.link;
+  popupImageCaption.textContent = cardRecord.name;
 }
 
 // выводим все карточки на страницу
 initialCards.forEach((cardRecord) => {
-  const cardElement = createCard(cardRecord, deleteCard, popupCardImage, likeCard);
+  const cardElement = createCard(cardRecord, 
+    {deleteFunction: deleteCard, popupFunction:popupCardImage, likeFunction:likeCard});
   cardContainer.append(cardElement); // добавляем карточку на страницу
 });
 
-// делаем все попапы с небольшой анимацией как в ТЗ
-const classAnimated = 'popup_is-animated'; // тот самый класс для анимации
-popupProfileEdit.classList.add(classAnimated);
-popupNewCard.classList.add(classAnimated);
-popupImage.classList.add(classAnimated);
+// перебираем все кнопки закрытия попапов
+document.querySelectorAll('.popup__close').forEach(buttonClose => {
+  const popup = buttonClose.closest('.popup');
+  buttonClose.addEventListener('click', () => closeModal(popup)); // вешаем закрытие попапа
+  popup.addEventListener("mousedown", closeWindowOverlay);  // за пределами формы щелчок мыши, закрытие по оверлею
+  popup.classList.add('popup_is-animated'); // делаем все попапы с небольшой анимацией как в ТЗ
+}) 
 
 // назначаем события
 profileEditButton.addEventListener("click", editProfile); // редактирование профайла
 buttonAddCard.addEventListener("click", () => { openModal(popupNewCard); }); // добавление новой карточки
+// кнопка close
+
 // submit
 popupProfileForm.addEventListener('submit', handleProfileFormSubmit); // сохранение профайла
 popupNewCardForm.addEventListener('submit', handleNewCardFormSubmit); // создание новой карточки
