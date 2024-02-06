@@ -53,6 +53,7 @@ function handleNewCardFormSubmit(evt) {
 function popupCardImage(cardRecord) {
   openModal(popupImage);
   popupImageImage.src = cardRecord.link;
+  popupImageImage.alt = cardRecord.name;
   popupImageCaption.textContent = cardRecord.name;
 }
 
