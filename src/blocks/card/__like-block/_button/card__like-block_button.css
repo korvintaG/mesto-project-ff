@@ -1,9 +1,9 @@
-.card__like-button {
-  width: 21px;
-  height: 18px;
-  background: transparent url('../../../images/like-inactive.svg') no-repeat;
+.card__like-block_button {
+  width: 22px;
+  height: 19px;
+  background: transparent url('../../../../images/like-inactive.svg') no-repeat;
   
-  background-size: 21px 18px;
+  background-size: 22px 19px;
   border: none;
   cursor: pointer;
   padding: 0;
@@ -13,8 +13,10 @@
   -ms-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
+  
 }
 
-.card__like-button:hover {
+.card__like-block_button:hover {
   opacity: 0.6;
 }
+

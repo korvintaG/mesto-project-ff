@@ -1,0 +1,13 @@
+.popup__input_error-span {
+  position: absolute;
+  display: flex;
+  justify-content: left; /* Align horizontal */
+  align-items: center; /* Align vertical */
+  width: 100%;
+  height: 24px;
+  margin: 4px 0;
+  vertical-align: center;
+  color: red;
+  font-size: 12px;
+  line-height: 12px;
+}
