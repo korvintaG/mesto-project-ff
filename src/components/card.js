@@ -37,7 +37,7 @@ export function setLikeCount(heartButton, cnt) {
  *                            likeFunction - функция лайка
  */
 export function createCard(cardRecord, curUserID, handler) {
-  const isLiked = cardRecord.likes.find((elem) => elem._id === curUserID); // проставлен ли IsLike изначально?
+  const isLiked = cardRecord.likes.some((elem) => elem._id === curUserID); // проставлен ли IsLike изначально?
   const canDelete = cardRecord.owner._id === curUserID;
 
   const cardElement = cardTemplateElement.cloneNode(true); // клонируем шаблон
@@ -54,8 +54,8 @@ export function createCard(cardRecord, curUserID, handler) {
   cardElementImage.alt = cardRecord.name;
   cardElementTitle.textContent = cardRecord.name;
   setLikeCount(cardElementLikeButton, cardRecord.likes.length);
-  if (isLiked)
-    cardElementLikeButton.classList.toggle(likeClass);
+  if (isLiked) // если стоит лайк, то рисуем
+    cardElementLikeButton.classList.add(likeClass);
   // добавляем обработчик клика
   if (canDelete)
     cardElementDelButton.addEventListener("click", () =>

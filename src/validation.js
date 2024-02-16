@@ -26,6 +26,11 @@ export function clearValidation(form, validationConfig) {
   inputList.forEach((inputElement) => {
     hideInputError(form, inputElement, validationConfig);
   });
+  disableSubmitButton(buttonElement, validationConfig);
+}
+
+// функция делания кнопки сабмита недоступной
+function disableSubmitButton(buttonElement, validationConfig) {
   buttonElement.disabled = true;
   buttonElement.classList.add(validationConfig.inactiveButtonClass);
 }
@@ -85,8 +90,7 @@ function toggleButtonState(inputList, buttonElement, validationConfig) {
   // Если есть хотя бы один невалидный инпут
   if (hasInvalidInput(inputList)) {
     // сделай кнопку неактивной
-    buttonElement.disabled = true;
-    buttonElement.classList.add(validationConfig.inactiveButtonClass);
+    disableSubmitButton(buttonElement, validationConfig);
   } else {
     // иначе сделай кнопку активной
     buttonElement.disabled = false;

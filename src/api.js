@@ -7,18 +7,21 @@ const config = {
   },
 };
 
+// универсальная функция обработки результата запросов
+function handleResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+}
+
 /* функция получения с сервера информации о текущем пользователе
  * @promise
  */
 export const getUser = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res))
 };
 
 /* функция сохранения на сервере информации о текущем пользователе
@@ -31,12 +34,7 @@ export const patchUser = (userRecord) => {
     method: "PATCH",
     headers: config.headers,
     body: jsonStr,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res))
 };
 
 /* функция сохранения на сервере информации об аватаре текущего пользователе
@@ -49,12 +47,7 @@ export const patchAvatar = (avatar) => {
     method: "PATCH",
     headers: config.headers,
     body: jsonStr,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res))
 };
 
 /* функция получения с сервера карточек
@@ -63,12 +56,7 @@ export const patchAvatar = (avatar) => {
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res))
 };
 
 
@@ -82,12 +70,7 @@ export const postCard = (cardRecord) => {
     method: "POST",
     headers: config.headers,
     body: jsonStr,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res))
 };
 
 /* функция удаления на сервере карточки
@@ -98,12 +81,7 @@ export const deleteCard = (cardID) => {
   return fetch(`${config.baseUrl}/cards/` + cardID, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res))
 };
 
 /* функция лайка/дизлайка карточки на сервере
@@ -120,10 +98,5 @@ export const likeCard = (cardID, oldLike) => {
   return fetch(`${config.baseUrl}/cards/likes/` + cardID, {
     method,
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res))
 };

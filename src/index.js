@@ -87,14 +87,14 @@ function editAvatar(evt) {
 function handleProfileFormSubmit(evt) {
   evt.preventDefault(); // отменяем стандартную обработку submit
   const oldText = popupProfileButton.textContent;
-  popupProfileButton.textContent = popupProfileButton.textContent + "...";
+  popupProfileButton.textContent = "Сохранение...";
   patchUser({
     name: profileFormName.value,
     about: profileFormDescription.value,
   })
-    .then(() => {
-      profileTitle.textContent = profileFormName.value; // меняем имя профайла из формы
-      profileDescription.textContent = profileFormDescription.value; // меняем описание профайла из формы
+    .then((res) => {
+      profileTitle.textContent = res.name; // меняем имя профайла
+      profileDescription.textContent = res.about; // меняем описание профайла
     })
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
@@ -109,12 +109,12 @@ function handleProfileFormSubmit(evt) {
 function handleAvatarFormSubmit(evt) {
   evt.preventDefault(); // отменяем стандартную обработку submit
   const oldText = popupAvatarButton.textContent;
-  popupAvatarButton.textContent = popupAvatarButton.textContent + "...";
+  popupAvatarButton.textContent = "Сохранение...";
   patchAvatar(popupAvatarEditURL.value)
-    .then(() => {
+    .then((res) => {
       profileImage.setAttribute(
         "style",
-        `background-image: url('${popupAvatarEditURL.value}');`
+        `background-image: url('${res.avatar}');`
       );
     })
     .catch((err) => {
@@ -130,7 +130,7 @@ function handleAvatarFormSubmit(evt) {
 function handleNewCardFormSubmit(evt, userID) {
   evt.preventDefault(); // отменяем стандартную обработку submit
   const oldText = popupNewCardButton.textContent;
-  popupNewCardButton.textContent = popupNewCardButton.textContent + "...";
+  popupNewCardButton.textContent = "Сохранение...";
   const cardRecord = {
     name: newCardFormName.value,
     link: newCardFormLink.value,
@@ -139,10 +139,9 @@ function handleNewCardFormSubmit(evt, userID) {
   };
   postCard(cardRecord)
     .then((res) => {
-      cardRecord._id = res._id;
-      const cardElement = createCard(cardRecord, userID, {
+      const cardElement = createCard(res, userID, {
         deleteFunction: deleteCard,
-        popupFunction: popupCardImage,
+        popupFunction: showCardImage,
         likeFunction: likeCard,
       });
       cardContainer.prepend(cardElement); // добавляем карточку на страницу в начало
@@ -160,36 +159,28 @@ function handleNewCardFormSubmit(evt, userID) {
 // функция комплексного удаления карточки - и в DOM, и на сервере (с подтверждением)
 function deleteCard(cardElement, cardID) {
   openModal(popupDelCard);
-  handleDelCardFormSubmitLet({ cardID, cardElement }); // проставление переменных для удаления карточки
+  cardToDel = { cardID, cardElement }; // проставление переменных для удаления карточки
 }
 
-// функция удаления карточки посредством механизма замыкания
+// функция удаления карточки используя внешнюю переменную
+let cardToDel; // переменная внешняя для сохранения инфо по удаляемой карточки попапа
 function handleDelCardFormSubmit(evt) {
-  let cardToDel; // переменная удаления карточки
-  return function (evt) {
-    if (evt.target === undefined) {
-      // передача параметров
-      cardToDel = evt;
-    } else {
-      evt.preventDefault(); // отменяем стандартную обработку submit
-      const oldText = popupDelCardButton.textContent;
-      popupDelCardButton.textContent = 'Удаление...';
-      deleteCardAPI(cardToDel.cardID)
-        .then(() => {
-          deleteCardDOM(cardToDel.cardElement);
-          closeModal(popupDelCard); // закрываем попап
-        })
-        .catch((err) => {
-          console.log(err); // выводим ошибку в консоль
-        })
-        .finally (() => popupDelCardButton.textContent = oldText);
-    }
-  };
+  evt.preventDefault(); // отменяем стандартную обработку submit
+  const oldText = popupDelCardButton.textContent;
+  popupDelCardButton.textContent = 'Удаление...';
+  deleteCardAPI(cardToDel.cardID)
+    .then(() => {
+      deleteCardDOM(cardToDel.cardElement);
+      closeModal(popupDelCard); // закрываем попап
+    })
+    .catch((err) => {
+      console.log(err); // выводим ошибку в консоль
+    })
+    .finally (() => popupDelCardButton.textContent = oldText);
 }
-let handleDelCardFormSubmitLet = handleDelCardFormSubmit(); // инициализация контекста замыкания
 
 // обработчик события - попап изображения карточки (передается запись карточки - name и link)
-function popupCardImage(cardRecord) {
+function showCardImage(cardRecord) {
   openModal(popupImage);
   popupImageImage.src = cardRecord.link;
   popupImageImage.alt = cardRecord.name;
@@ -229,7 +220,7 @@ buttonAddCard.addEventListener("click", () => {
 }); // добавление новой карточки
 
 // submit
-popupDelCardForm.addEventListener("submit", handleDelCardFormSubmitLet); // удаление карточки
+popupDelCardForm.addEventListener("submit", handleDelCardFormSubmit); // удаление карточки
 popupProfileForm.addEventListener("submit", handleProfileFormSubmit); // сохранение профайла
 popupAvatarForm.addEventListener("submit", handleAvatarFormSubmit); // сохранение аватара профайла
 
@@ -250,7 +241,7 @@ Promise.all([getUser(), getInitialCards()])
     cards.forEach((card) => {
       const cardElement = createCard(card, user._id, {
         deleteFunction: deleteCard,
-        popupFunction: popupCardImage,
+        popupFunction: showCardImage,
         likeFunction: likeCard,
       });
       cardContainer.append(cardElement); // добавляем карточку на страницу
